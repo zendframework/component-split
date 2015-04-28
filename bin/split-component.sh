@@ -183,19 +183,22 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
 echo "Executing tree-filter"
 (
     cd $ZF2_PATH ;
-    git filter-branch -f --prune-empty --tree-filter "
-        ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
-            ${COMPONENT} \
-            ${ROOT_DIR} \
-            ${PHP_EXEC} \
-            ${README:='(none)'} \
-            ${TRAVIS_CONFIG:='(none)'} \
-            ${PHPCS_CONFIG:='(none)'} \
-            ${TEST_CONFIG_DIST} \
-            ${TEST_CONFIG_TRAVIS} \
-            ${PHPUNIT_DIST:='(none)'}
-" release-2.3.6..HEAD ;
-    git gc --aggressive
+    git filter-branch -f --prune-empty \
+        --tree-filter "
+            ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
+                ${COMPONENT} \
+                ${ROOT_DIR} \
+                ${PHP_EXEC} \
+                ${README:='(none)'} \
+                ${TRAVIS_CONFIG:='(none)'} \
+                ${PHPCS_CONFIG:='(none)'} \
+                ${TEST_CONFIG_DIST} \
+                ${TEST_CONFIG_TRAVIS} \
+                ${PHPUNIT_DIST:='(none)'}
+"       --msg-filter "
+            sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
+" --tag-name-filter cat release-2.0.0..HEAD ;
+    git gc --aggressive ;
 )
 
 echo
