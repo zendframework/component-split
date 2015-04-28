@@ -1,0 +1,23 @@
+<phpunit bootstrap="./test/Bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="zend-{COMPONENT} Test Suite">
+            <directory>./test/{COMPONENT_NAME}</directory>
+        </testsuite>
+    </testsuites>
+
+    <groups>
+        <exclude>
+            <group>disable</group>
+        </exclude>
+    </groups>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <ini name="date.timezone" value="UTC"/>
+    </php>
+</phpunit>
