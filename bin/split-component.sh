@@ -123,10 +123,10 @@ if [[ "$TRAVIS_CONFIG" != "" ]]; then
     fi
 fi
 
-if [[ "$README" != "" ]]; then
-    README=$(readlink -f "$README" 2>&1)
-    if [[ "$README" = "" ]]; then
-        echo "-r <README.md> is REQUIRED, and must be a valid filename" >&2
+if [[ "${README}" != "" ]]; then
+    README=$(readlink -f "${README}" 2>&1)
+    if [[ "${README}" = "" ]]; then
+        echo "-r <README.md> MUST be a valid filename" >&2
         ERROR=1
     fi
 fi
@@ -152,12 +152,7 @@ echo
 # Script-specific variables
 ZF2_REPO="git://github.com/zendframework/zf2"
 ROOT_DIR=$(readlink -f $(dirname $0)/..)
-ASSET_DIR=${ROOT_DIR}/assets
 TMP_DIR=${ROOT_DIR}/tmp
-COMPOSER_REWRITER=${ROOT_DIR}/bin/composer-rewriter.php
-INJECT=${ROOT_DIR}/bin/inject-name.php
-NORMALIZE=${ROOT_DIR}/bin/inject-normalized.php
-NORMALIZED=$(${PHP_EXEC} ${ROOT_DIR}/bin/normalize.php ${COMPONENT})
 
 # Clone the ZF2 repo
 if [[ -d "$ZF2_PATH" ]]; then
@@ -168,6 +163,7 @@ if [[ -d "$ZF2_PATH" ]]; then
 else
     git clone $ZF2_REPO $ZF2_PATH ;
 fi
+ZF2_PATH=$(readlink -f ${ZF2_PATH})
 
 # Ensure we have an actual component
 if [[ ! -d "${ZF2_PATH}/library/Zend/${COMPONENT}" ]];then
@@ -182,73 +178,22 @@ fi
 
 # Copy the composer.json for the component to the temporary directory
 cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.json"
-COMPOSER_CURRENT=${TMP_DIR}/composer.json
 
 # Perform the tree-filter
 echo "Executing tree-filter"
 (
     cd $ZF2_PATH ;
     git filter-branch -f --prune-empty --tree-filter "
-        mkdir -p .zend-${NORMALIZED}-migrate/{src-tree,test} ;
-        if [ -d "library/Zend/${COMPONENT}" ]; then
-            rsync -a library/Zend/${COMPONENT} .zend-${NORMALIZED}-migrate/src-tree/ ;
-            if [ -d "tests/Zend" ]; then
-                rsync -a tests/Zend/${COMPONENT} .zend-${NORMALIZED}-migrate/test/ ;
-            else
-                rsync -a tests/ZendTest/${COMPONENT} .zend-${NORMALIZED}-migrate/test/ ;
-            fi ;
-        fi ;
-        rm -Rf * ;
-        mv .zend-${NORMALIZED}-migrate/* . ;
-        mv src-tree/${COMPONENT} src ;
-        rmdir src-tree ;
-        for NOTSOURCE in src/*.*;do
-            if [ $(basename ${NOTSOURCE} .json) != $(basename "${NOTSOURCE}") ];then
-                mv ${NOTSOURCE} . ;
-                continue ;
-            fi ;
-            if [ $(basename ${NOTSOURCE} .md) != $(basename "${NOTSOURCE}") ];then
-                mv ${NOTSOURCE} . ;
-                continue ;
-            fi ;
-        done ;
-        if [ "${README}" = "" ]; then
-            cat ${ASSET_DIR}/root-files/README-COMPONENT.md | ${PHP_EXEC} ${NORMALIZE} ${COMPONENT} > README.md ;
-        else
-            cp ${README} . ;
-        fi ;
-        cp ${ASSET_DIR}/root-files/LICENSE.txt . ;
-        cp ${ASSET_DIR}/root-files/coveralls.yml .coveralls.yml ;
-        cp ${ASSET_DIR}/root-files/gitattributes .gitattributes ;
-        cp ${ASSET_DIR}/root-files/gitignore .gitignore ;
-        cat ${ASSET_DIR}/root-files/CONTRIBUTING.md | ${PHP_EXEC} ${NORMALIZE} ${COMPONENT} > CONTRIBUTING.md
-        if [ "$TRAVIS_CONFIG" = "" ]; then
-            cp ${ASSET_DIR}/root-files/travis.yml .travis.yml ;
-        else
-            cp ${TRAVIS_CONFIG} .travis.yml ;
-        fi ;
-        if [ "${PHPCS_CONFIG}" = "" ]; then
-            cp ${ASSET_DIR}/root-files/php_cs .php_cs ;
-        else
-            cp ${PHPCS_CONFIG} .php_cs ;
-        fi ;
-        cp ${ASSET_DIR}/test-files/gitignore test/.gitignore ;
-        cat ${ASSET_DIR}/test-files/Bootstrap.php | ${PHP_EXEC} ${NORMALIZE} ${COMPONENT} > test/Bootstrap.php ;
-        cp ${TEST_CONFIG_DIST} test/TestConfiguration.php.dist ;
-        cp ${TEST_CONFIG_TRAVIS} test/TestConfiguration.php.travis ;
-        if [ "${PHPUNIT_DIST}" = "" ]; then
-            cat ${ASSET_DIR}/test-files/phpunit.xml.dist | ${PHP_EXEC} ${INJECT} ${COMPONENT} | ${PHP_EXEC} ${NORMALIZE} ${COMPONENT} > phpunit.xml.dist ;
-        else
-            cp ${PHPUNIT_DIST} phpunit.xml.dist ;
-        fi ;
-        if [ -f composer.json ]; then
-            mv composer.json composer.json.orig ;
-            cat composer.json.orig | ${PHP_EXEC} ${COMPOSER_REWRITER} ${COMPONENT} ${COMPOSER_CURRENT}> composer.json ;
-            rm composer.json.orig ;
-        else
-            echo -n | ${PHP_EXEC} ${COMPOSER_REWRITER} ${COMPONENT} ${COMPOSER_CURRENT} > composer.json ;
-        fi ;
-        rmdir .zend-${NORMALIZED}-migrate ;
+        ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
+            ${COMPONENT} \
+            ${ROOT_DIR} \
+            ${PHP_EXEC} \
+            ${README:='(none)'} \
+            ${TRAVIS_CONFIG:='(none)'} \
+            ${PHPCS_CONFIG:='(none)'} \
+            ${TEST_CONFIG_DIST} \
+            ${TEST_CONFIG_TRAVIS} \
+            ${PHPUNIT_DIST:='(none)'}
 " release-2.3.6..HEAD ;
     git gc --aggressive
 )

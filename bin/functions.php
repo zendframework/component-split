@@ -38,3 +38,22 @@ function arrayMergeRecursive(array $a, array $b, $preserveNumericKeys = false)
 
     return $a;
 }
+
+function command($pattern, $errorMessage = null)
+{
+    $args = func_get_args();
+    array_shift($args); // remove pattern
+    if (! empty($args)) {
+        $errorMessage = array_pop($args); // remove and re-assign error message
+    }
+
+    $command = vsprintf($pattern, $args);
+    exec($command, $output, $status);
+    if (0 != $status) {
+        $errorMessage = empty($errorMessage)
+            ? sprintf("Error executing command: %s\n", $command)
+            : sprintf("%s\n    while executing command: %s\n", $errorMessage, $command);
+        error_log($errorMessage);
+        exit(1);
+    }
+}

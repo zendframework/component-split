@@ -65,7 +65,7 @@ function parseComposerJson($path, $component, $useTemplateOnError = true)
 
     if (empty($json)) {
         if ($useTemplateOnError) {
-            error_log(sprintf("No composer.json contents for component %s; using template\n", $component));
+            error_log(sprintf("\nNo composer.json contents for component %s; using template\n", $component));
         }
 
         return $useTemplateOnError ? createComposerTemplate($component) : [];
@@ -75,7 +75,7 @@ function parseComposerJson($path, $component, $useTemplateOnError = true)
 
     if (! is_array($composer)) {
         if ($useTemplateOnError) {
-            error_log(sprintf("Error decoding composer.json contents for component %s; using template\n", $component));
+            error_log(sprintf("\nError decoding composer.json contents for component %s; using template\n", $component));
             error_log(sprintf("composer.json contents:\n%s\n", $json));
             error_log(sprintf("Parsed:\n%s\n", var_export($composer, 1)));
         }
