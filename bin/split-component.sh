@@ -183,6 +183,7 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
 echo "Executing tree-filter"
 (
     cd $ZF2_PATH ;
+    git remote rm origin ;
     git filter-branch -f --prune-empty \
         --tree-filter "
             ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
@@ -199,7 +200,7 @@ echo "Executing tree-filter"
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
 " --tag-name-filter cat release-2.0.0rc3..HEAD ;
     for TAG in dev1 dev2 dev3 dev4 beta1 beta2 beta3 beta4 beta5 rc1 rc2 rc3 rc4 rc5 rc6 rc7; do
-        git tag -d release-2.0.o${TAG} ;
+        git tag -d release-2.0.0${TAG} ;
     done ;
     git gc --aggressive ;
 )
