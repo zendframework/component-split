@@ -155,14 +155,10 @@ ROOT_DIR=$(readlink -f $(dirname $0)/..)
 TMP_DIR=${ROOT_DIR}/tmp
 
 # Clone the ZF2 repo
-if [[ -d "$ZF2_PATH" ]]; then
-    (
-        cd "$ZF2_PATH" ; 
-        git reset --hard origin/master ;
-    )
-else
-    git clone $ZF2_REPO $ZF2_PATH ;
+if [[ -d "${ZF2_PATH}" ]]; then
+    rm -Rf ${ZF2_PATH} ;
 fi
+git clone $ZF2_REPO $ZF2_PATH ;
 ZF2_PATH=$(readlink -f ${ZF2_PATH})
 
 # Ensure we have an actual component
