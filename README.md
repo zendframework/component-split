@@ -90,19 +90,11 @@ install` and `phpunit` as spot-checks.
 > differences in PHPUnit syntax, missing dependencies, etc. The main thing is
 > to ensure it runs at all.
 
-Now that you've done that, in order to cleanup and remove unused objects, clone
-the repository; assuming you used the default of `zf2-migrate` for the ZF2 path
-in which to perform the split, do the following:
-
-```console
-$ git clone zf2-migrate zend-{component}
-```
-
 Once done, create a component repository under your own username on GitHub, add
 it as a remote to your local repository, and push the full history to it:
 
 ```console
-$ cd zend-{component}
+$ cd zf2-migrate
 $ git remote add username git@github.com:username/zend-{component}.git
 $ git push --all --tags username
 ```
