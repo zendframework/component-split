@@ -180,8 +180,8 @@ fi
 cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.json"
 
 # Perform the tree-filter
-echo "Executing tree-filter"
 (
+    echo "Executing tree-filter" ;
     cd $ZF2_PATH ;
     git remote rm origin ;
     git filter-branch -f --prune-empty \
@@ -202,7 +202,12 @@ echo "Executing tree-filter"
     for TAG in dev1 dev2 dev3 dev4 beta1 beta2 beta3 beta4 beta5 rc1 rc2 rc3 rc4 rc5 rc6 rc7; do
         git tag -d release-2.0.0${TAG} ;
     done ;
-    git gc --aggressive ;
+    echo "Pruning history and removing stale objects" ;
+    echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
+    git filter-branch -f -- --all ; 
+    git update-ref -d refs/original/refs/heads/master ;
+    git reflog expire --expire=now --all ;
+    git gc --prune=now --aggressive ;
 )
 
 echo
