@@ -201,7 +201,7 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
     done ;
     echo "Pruning history and removing stale objects" ;
     echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
-    git filter-branch -f -- --all ; 
+    git filter-branch -f --tag-name-filter cat -- --all ; 
     git update-ref -d refs/original/refs/heads/master ;
     git reflog expire --expire=now --all ;
     git gc --prune=now --aggressive ;
