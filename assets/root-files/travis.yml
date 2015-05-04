@@ -3,8 +3,6 @@ sudo: false
 language: php
  
 php:
-  - 5.3
-  - 5.4
   - 5.5
   - 5.6
   - 7
@@ -30,8 +28,8 @@ before_script:
   - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then mkdir -p build/logs; fi
  
 script:
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/phpunit -c tests/phpunit.xml.dist --coverage-clover build/logs/clover.xml; fi
-  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then php ./vendor/bin/phpunit -c tests/phpunit.xml.dist; fi
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml; fi
+  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis; fi
  
   - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs; fi
  
