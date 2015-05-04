@@ -1,5 +1,7 @@
+sudo: false
+ 
 language: php
-
+ 
 php:
   - 5.3
   - 5.4
@@ -8,36 +10,30 @@ php:
   - 7
   - hhvm
   - hhvm-nightly
-
-install:
-  - if [[ $TRAVIS_PHP_VERSION != '5.6' && $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != 'hhvm-nightly' && $TRAVIS_PHP_VERSION != '7' ]]; then phpenv config-rm xdebug.ini;  fi
-  - sudo apt-get install parallel libpcre3-dev
-  - composer install --no-interaction --prefer-source
-
-before_script:
-  - php --version
-  - cp tests/TestConfiguration.php.travis tests/TestConfiguration.php
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then mkdir -p build/coverage; fi
-
-script:
-  # Run tests
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/phpunit --coverage-clover build/logs/clover.xml ; fi
-  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then php vendor/bin/phpunit ; fi
-
-  # Run coding standard checks
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/php-cs-fixer fix . -v --diff --dry-run --config-file=.php_cs ; fi
-
-after_script:
-  # Execute coveralls
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/coveralls -v ; fi
-
-notifications:
-  irc: "irc.freenode.org#zftalk.dev"
-  email: false
-
+ 
 matrix:
   fast_finish: true
   allow_failures:
     - php: 7
     - php: hhvm
     - php: hhvm-nightly
+ 
+notifications:
+  irc: "irc.freenode.org#zftalk.dev"
+  email: false
+ 
+install:
+  - if [[ $TRAVIS_PHP_VERSION != '5.6' && $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != 'hhvm-nightly' && $TRAVIS_PHP_VERSION != '7' ]]; then phpenv config-rm xdebug.ini;  fi
+  - composer install --no-interaction --prefer-source
+ 
+before_script:
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then mkdir -p build/logs; fi
+ 
+script:
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/phpunit -c tests/phpunit.xml.dist --coverage-clover build/logs/clover.xml; fi
+  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then php ./vendor/bin/phpunit -c tests/phpunit.xml.dist; fi
+ 
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs; fi
+ 
+after_script:
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/coveralls; fi
