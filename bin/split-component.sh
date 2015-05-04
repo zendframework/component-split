@@ -2,16 +2,20 @@
 echo "ZF2 Component Split Tool, v0.1.0"
 echo
 
+# General variables
+ZF2_REPO="git://github.com/zendframework/zf2"
+ROOT_DIR=$(readlink -f $(dirname $0)/..)
+TMP_DIR=${ROOT_DIR}/tmp
+
 # Variables to set via options
-ZF2_PATH=zf2-migrate
-PHP_EXEC=$(which php)
 COMPONENT=
 PHPUNIT_DIST=
-TEST_CONFIG_DIST=
-TEST_CONFIG_TRAVIS=
-PHPCS_CONFIG=
-TRAVIS_CONFIG=
+PHPUNIT_TRAVIS=
+ZF2_PATH=zf2-migrate
+PHPCS_CONFIG=${ROOT_DIR}/assets/root-files/php_cs
+TRAVIS_CONFIG=${ROOT_DIR}/assets/root-files/travis.yml
 README=
+PHP_EXEC=$(which php)
 
 # Functions
 function help {
@@ -21,16 +25,15 @@ function help {
     fi
 
     echo "Usage:"
-    echo "-h                     Help; this message"
-    echo "-c <Component>         Component to split out"
-    echo "-z <ZF2 path>          Path in which to clone ZF2; defaults to 'zf2-migrate'"
-    echo "-p <PHP executable>    PHP executable to use (for composer rewrite); defaults to /usr/bin/env php"
-    echo "-u <phpunit.xml.dist>  Path to phpunit.xml.dist to use for this component; a template is used by default"
-    echo "-t <TestConfiguration.php.dist>  Path to the component's TestConfiguration.php.dist file"
-    echo "-i <TestConfiguration.php.travis>  Path to the component's TestConfiguration.php.travis file"
-    echo "-s <.php_cs>           Path to the component-specific .php_cs file, if any"
-    echo "-T <.travis.yml>       Path to the component-specific .travis.yml file, if any"
-    echo "-r <README.md>         Path to the component-specific README.md file; a template is used by default"
+    echo "-h                      Help; this message"
+    echo "-c <Component>          Component to split out (REQUIRED)"
+    echo "-u <phpunit.xml.dist>   Path to phpunit.xml.dist to use for this component (REQUIRED)"
+    echo "-t <phpunit.xml.travis> Path to the component's TestConfiguration.php.dist file (REQUIRED)"
+    echo "-z <ZF2 path>           Path in which to clone ZF2; defaults to 'zf2-migrate'"
+    echo "-s <.php_cs>            Path to the component-specific .php_cs file, if any"
+    echo "-T <.travis.yml>        Path to the component-specific .travis.yml file, if any"
+    echo "-r <README.md>          Path to the component-specific README.md file; a template is used by default"
+    echo "-p <PHP executable>     PHP executable to use (for composer rewrite); defaults to /usr/bin/env php"
 
     exit $STATUS
 }
@@ -44,20 +47,14 @@ while getopts ":hc:z:p:u:t:i:s:T:r:" opt ;do
         c)
             COMPONENT=$OPTARG
             ;;
-        z)
-            ZF2_PATH=$OPTARG
-            ;;
-        p)
-            PHP_EXEC=$OPTARG
-            ;;
         u)
             PHPUNIT_DIST=$OPTARG
             ;;
         t)
-            TEST_CONFIG_DIST=$OPTARG
+            PHPUNIT_TRAVIS=$OPTARG
             ;;
-        i)
-            TEST_CONFIG_TRAVIS=$OPTARG
+        z)
+            ZF2_PATH=$OPTARG
             ;;
         s)
             PHPCS_CONFIG=$OPTARG
@@ -67,6 +64,9 @@ while getopts ":hc:z:p:u:t:i:s:T:r:" opt ;do
             ;;
         r)
             README=$OPTARG
+            ;;
+        p)
+            PHP_EXEC=$OPTARG
             ;;
         \?)
             echo "Invalid option!"
@@ -84,26 +84,17 @@ ERROR=0
 if [[ $COMPONENT = "" ]]; then
     echo "-c <COMPONENT> is REQUIRED" >&2
     ERROR=1
-    help 1
 fi
 
-if [[ "$PHPUNIT_DIST" != "" ]]; then
-    PHPUNIT_DIST=$(readlink -f "$PHPUNIT_DIST" 2>&1)
-    if [[ "$PHPUNIT_DIST" = "" ]]; then
-        echo "-u <phpunit.xml.dist> MUST be a valid filename" >&2
-        ERROR=1
-    fi
-fi
-
-TEST_CONFIG_DIST=$(readlink -f "$TEST_CONFIG_DIST" 2>&1)
-if [[ "$TEST_CONFIG_DIST" = "" ]]; then
-    echo "-t <TestConfiguration.php.dist> is REQUIRED, and must be a valid filename" >&2
+PHPUNIT_DIST=$(readlink -f "${PHPUNIT_DIST}" 2>&1)
+if [[ "${PHPUNIT_DIST}" = "" ]]; then
+    echo "-u <phpunit.xml.dist> MUST be a valid filename and is REQUIRED" >&2
     ERROR=1
 fi
 
-TEST_CONFIG_TRAVIS=$(readlink -f "$TEST_CONFIG_TRAVIS" 2>&1)
-if [[ "$TEST_CONFIG_TRAVIS" = "" ]]; then
-    echo "-t <TestConfiguration.php.travis> is REQUIRED, and must be a valid filename" >&2
+PHPUNIT_TRAVIS=$(readlink -f "${PHPUNIT_TRAVIS}" 2>&1)
+if [[ "${PHPUNIT_TRAVIS}" = "" ]]; then
+    echo "-t <phpunit.xml.travis> MUST be a valid filename and is REQUIRED" >&2
     ERROR=1
 fi
 
@@ -141,18 +132,12 @@ echo "Splitting component ${COMPONENT}"
 echo "Using:"
 echo "    PHP:                           ${PHP_EXEC}"
 echo "    ZF2 path:                      ${ZF2_PATH}"
-echo "    TestConfiguration.php.dist:    ${TEST_CONFIG_DIST}"
-echo "    TestConfiguration.php.travis:  ${TEST_CONFIG_TRAVIS}"
-if [[ "" != "${PHPUNIT_DIST}" ]]; then echo "    phpunit.xml.dist:              ${PHPUNIT_DIST}" ; fi
+echo "    phpunit.xml.dist:              ${PHPUNIT_DIST}"
+echo "    phpunit.xml.travis:            ${PHPUNIT_TRAVIS}"
 if [[ "" != "${PHPCS_CONFIG}" ]]; then echo "    .php_cs:                       ${PHPCS_CONFIG}" ; fi
 if [[ "" != "${TRAVIS_CONFIG}" ]]; then echo "    .travis.yml:                   ${TRAVIS_CONFIG}" ; fi
 if [[ "" != "${README}" ]]; then echo "    README.md:                     ${README}" ; fi
 echo
-
-# Script-specific variables
-ZF2_REPO="git://github.com/zendframework/zf2"
-ROOT_DIR=$(readlink -f $(dirname $0)/..)
-TMP_DIR=${ROOT_DIR}/tmp
 
 # Clone the ZF2 repo
 if [[ -d "${ZF2_PATH}" ]]; then
@@ -186,12 +171,11 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
                 ${COMPONENT} \
                 ${ROOT_DIR} \
                 ${PHP_EXEC} \
+                ${PHPUNIT_DIST} \
+                ${PHPUNIT_TRAVIS} \
                 ${README:='(none)'} \
                 ${TRAVIS_CONFIG:='(none)'} \
-                ${PHPCS_CONFIG:='(none)'} \
-                ${TEST_CONFIG_DIST} \
-                ${TEST_CONFIG_TRAVIS} \
-                ${PHPUNIT_DIST:='(none)'}
+                ${PHPCS_CONFIG:='(none)'}
 "       --msg-filter "
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
 " --tag-name-filter cat release-2.0.0rc3..HEAD ;

@@ -7,19 +7,18 @@ $assetDir         = $rootDir . '/assets';
 $scriptDir        = $rootDir . '/bin';
 $tmpDir           = $rootDir . '/tmp';
 $php              = $argv[3];
-$readme           = $argv[4] === '(none)' ? null : $argv[4];
-$travisYml        = $argv[5] === '(none)' ? null : $argv[5];
-$phpCs            = $argv[6] === '(none)' ? null : $argv[6];
-$testConfigDist   = $argv[7];
-$testConfigTravis = $argv[8];
-$phpUnitConfig    = $argv[9] === '(none)' ? null : $argv[9];
+$phpUnitConfig    = $argv[4];
+$phpUnitTravis    = $argv[5];
+$readme           = $argv[6] === '(none)' ? null : $argv[6];
+$travisYml        = $argv[7] === '(none)' ? null : $argv[7];
+$phpCs            = $argv[8] === '(none)' ? null : $argv[8];
 
-mkdir('.zend-migrate/src-tree', 0777, true);
+mkdir('.zend-migrate/src', 0777, true);
 mkdir('.zend-migrate/test', 0777, true);
 
 if (is_dir('library/Zend/' . $component)) {
     command(
-        'rsync -a library/Zend/%s .zend-migrate/src-tree/',
+        'rsync -a library/Zend/%s .zend-migrate/src/',
         $component,
         sprintf('Failed to sync src directory for component %s; aborting', $component)
     );
@@ -40,9 +39,10 @@ if (is_dir('library/Zend/' . $component)) {
 }
 
 command('rm -Rf *', sprintf("Error removing root-level files for component %s", $component));
-rename('.zend-migrate/src-tree/' . $component, 'src');
-rename('.zend-migrate/test/', 'test');
-rmdir('.zend-migrate/src-tree');
+rename('.zend-migrate/src/' . $component, 'src');
+rename('.zend-migrate/test/' . $component, 'test');
+rmdir('.zend-migrate/src');
+rmdir('.zend-migrate/test');
 rmdir('.zend-migrate');
 
 foreach (new DirectoryIterator('src') as $fileInfo) {
@@ -69,29 +69,10 @@ file_put_contents(
     'CONTRIBUTING.md',
     str_replace('{COMPONENT}', $normalized, file_get_contents($assetDir . '/root-files/CONTRIBUTING.md'))
 );
-if ($travisYml && file_exists($travisYml)) {
-    copy($travisYml, '.travis.yml');
-} else {
-    copy($assetDir . '/root-files/travis.yml', '.travis.yml');
-}
-if ($phpCs && file_exists($phpCs)) {
-    copy($phpCs, '.php_cs');
-} else {
-    copy($assetDir . '/root-files/php_cs', '.php_cs');
-}
-if ($phpUnitConfig && file_exists($phpUnitConfig)) {
-    copy($phpUnitConfig, 'phpunit.xml.dist');
-} else {
-    $phpUnitConfig = str_replace(
-        '{COMPONENT}',
-        $normalized,
-        file_get_contents($assetDir . '/root-files/phpunit.xml.dist')
-    );
-    file_put_contents(
-        'phpunit.xml.dist',
-        str_replace('{COMPONENT_NAME}', $component, $phpUnitConfig)
-    );
-}
+copy($travisYml, '.travis.yml');
+copy($phpCs, '.php_cs');
+copy($phpUnitConfig, 'phpunit.xml.dist');
+copy($phpUnitTravis, 'phpunit.xml.travis');
 if (file_exists('composer.json')) {
     rename('composer.json', 'composer.json.orig');
     command(
@@ -117,9 +98,7 @@ if (file_exists('composer.json')) {
 // Test directory files
 copy($assetDir . '/test-files/gitignore', 'test/.gitignore');
 file_put_contents(
-    'test/Bootstrap.php',
-    str_replace('{COMPONENT}', $normalized, file_get_contents($assetDir . '/test-files/Bootstrap.php'))
+    'test/bootstrap.php',
+    str_replace('{COMPONENT}', $normalized, file_get_contents($assetDir . '/test-files/bootstrap.php'))
 );
-copy($testConfigDist, 'test/TestConfiguration.php.dist');
-copy($testConfigTravis, 'test/TestConfiguration.php.travis');
 exit(0);

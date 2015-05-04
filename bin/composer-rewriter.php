@@ -17,7 +17,7 @@ if (isset($composer['autoload']['psr-0'])) {
     unset($composer['autoload']['psr-0']);
 }
 
-// Ensure we have a PSR-4 autload section
+// Ensure we have a PSR-4 autoload section
 if (! isset($composer['autoload']['psr-4']) || empty($composer['autoload']['psr-4'])) {
     $composer['autoload']['psr-4'] = [
         'Zend\\' . $component . '\\' => 'src/',
@@ -37,7 +37,7 @@ foreach ($composer['autoload']['psr-4'] as $componentName => $path) {
 // Setup development autoloading rules
 $composer['autoload-dev'] = [
     'psr-4' => [
-        'ZendTest\\' . $component . '\\' => 'test/' . $component . '/',
+        'ZendTest\\' . $component . '\\' => 'test/',
     ],
 ];
 
