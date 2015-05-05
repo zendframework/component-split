@@ -19,49 +19,47 @@ It's usage is as follows:
 ZF2 Component Split Tool, v0.1.0
 
 Usage:
--h                     Help; this message
--c <Component>         Component to split out
--z <ZF2 path>          Path in which to clone ZF2; defaults to 'zf2-migrate'
--p <PHP executable>    PHP executable to use (for composer rewrite); defaults to /usr/bin/env php
--u <phpunit.xml.dist>  Path to phpunit.xml.dist to use for this component; a template is used by default
--t <TestConfiguration.php.dist>  Path to the component's TestConfiguration.php.dist file
--i <TestConfiguration.php.travis>  Path to the component's TestConfiguration.php.travis file
--s <.php_cs>           Path to the component-specific .php_cs file, if any
--T <.travis.yml>       Path to the component-specific .travis.yml file, if any
--r <README.md>         Path to the component-specific README.md file; a template is used by default
+-h                      Help; this message
+-c <Component>          Component to split out (REQUIRED)
+-u <phpunit.xml.dist>   Path to phpunit.xml.dist to use for this component (REQUIRED)
+-t <phpunit.xml.travis> Path to the component's TestConfiguration.php.dist file (REQUIRED)
+-z <ZF2 path>           Path in which to clone ZF2; defaults to 'zf2-migrate'
+-s <.php_cs>            Path to the component-specific .php_cs file, if any
+-T <.travis.yml>        Path to the component-specific .travis.yml file, if any
+-r <README.md>          Path to the component-specific README.md file; a template is used by default
+-p <PHP executable>     PHP executable to use (for composer rewrite); defaults to /usr/bin/env php
 ```
 
 The required options are:
 
 - `-c <Component>` to provide the component name. This should be the name of the
   directory in which it appears under the `library/Zend/` tree.
-- `-t <TestConfiguration.php.dist>` to provide the customized,
-  component-specific `TestConfiguration.php.dist` file. A full example is
-  under `assets/test-files/`; copy that to another location and edit it.
-- `-i <TestConfiguration.php.travis>` to provide the customized,
-  component-specific `TestConfiguration.php.travis` file. A full example is
-  under `assets/test-files/`; copy that to another location and edit it.
+- `-u <phpunit.xml.dist>` to provide the customized,
+  component-specific `phpunit.xml.dist` file. A full example is
+  under `assets/root-files/`; copy that to another location and edit it.
+- `-t <phpunit.xml.travis>` to provide the customized,
+  component-specific `phpunit.xml.travis` file. A full example is
+  under `assets/root-files/`; copy that to another location and edit it.
 
 We recommend that you create an appropriate, minimal `README.md` file to use as
 well, in order to provide details around the purpose of a component. Do not
 provide specifics on usage, as usage may have changed over the lifetime of the
 component.
 
-Finally, you may need to customize the `.php_cs`, `.travis.yml`, and/or
-`phpunit.xml.dist` file if the component you're splitting has additional files
-to ignore for coding standards, dependencies on non-standard extensions when
-testing, or defines additional unit test suites/groups. Write these to files
-locally, and specify their paths to the tool.
+Finally, you may need to customize the `.php_cs` and/or `.travis.yml` files if
+the component you're splitting has additional files to ignore for coding
+standards, or dependencies on non-standard extensions when testing. Write these
+to files locally, and specify their paths to the tool.
 
 As an example:
 
 ```console
-# Assume the TestConfiguration.* files were already prepared and are in the root
+# Assume the phpunit.xml.* files were already prepared and are in the root
 # directory when running.
 $ ./bin/split-component.sh \
 > -c Dom \
-> -t TestConfiguration.php.dist \
-> -i TestConfiguration.php.travis 2>&1 | tee -a split.log
+> -u phpunit.xml.dist \
+> -t phpunit.xml.travis 2>&1 | tee -a split.log
 ```
 
 > ### Note on duration
@@ -81,7 +79,7 @@ $ ./bin/split-component.sh \
 
 Once done, enter the directory in which the split occurred, and check the
 `composer.json` across a number of tags to verify it looks okay; run `composer
-install` and `phpunit` as spot-checks.
+install` and `phpunit` as spot-checks. (This will only work within tags!)
 
 > ### Note on unit tests
 >
