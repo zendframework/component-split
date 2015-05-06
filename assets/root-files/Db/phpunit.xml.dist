@@ -1,0 +1,102 @@
+<phpunit bootstrap="./test/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="zend-db Test Suite">
+            <directory>./test/</directory>
+        </testsuite>
+    </testsuites>
+
+    <groups>
+        <exclude>
+            <group>disable</group>
+        </exclude>
+    </groups>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <php>
+        <ini name="date.timezone" value="UTC"/>
+
+        <!-- OB_ENABLED should be enabled for some tests to check if all
+             functionality works as expected. Such tests include those for
+             Zend\Soap and Zend\Session, which require that headers not be sent
+             in order to work. -->
+        <const name="TESTS_ZEND_OB_ENABLED" value="0" />
+
+        <!-- Note: the following is a FULL list of ALL POSSIBLE constants
+             currently in use in ZF2 for ALL COMPONENTS; you should choose the
+             constants appropriate to the component you are migrating. -->
+
+        <!-- Zend\Db\Adapter\Pdo\Mysql and Zend\Db\Adapter\Mysqli
+
+             There are separate properties to enable tests for the PDO_MYSQL
+             adapter and the native Mysqli adapters, but the other properties
+             are shared between the two MySQL-related Zend\Db adapters. -->
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MYSQL_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQLI_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_HOSTNAME" value="127.0.0.1" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_DATABASE" value="test" />
+        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_PORT" value="3306" />
+
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_SQLITE_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_SQLITE_DATABASE" value=":memory:" />
+
+
+        <!-- Zend\Db\Adapter\Pdo\Mssql
+
+             Note that you need to patch your ntwdblib.dll, the one that
+             comes with PHP does not work. See user comments at
+             http://us2.php.net/manual/en/ref.mssql.php -->
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_HOSTNAME" value="127.0.0.1" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_DATABASE" value="test" />
+
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_HOSTNAME" value="127.0.0.1" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_DATABASE" value="postgres" />
+
+        <!-- Zend\Db\Adapter\Oracle and Zend\Db\Adapter\Pdo\Oci
+
+             There are separate properties to enable tests for the PDO_OCI
+             adapter and the native Oracle adapter, but the other properties
+             are shared between the two Oracle-related Zend\Db adapters. -->
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_OCI_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_HOSTNAME" value="127.0.0.1" />
+        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_SID" value="xe" />
+
+        <!-- Zend\Db\Adapter\Db2 and Zend\Db\Adapter\Pdo\Ibm
+
+             There are separate properties to enable tests for the PDO_IBM
+             adapter and the native DB2 adapter, but the other properties are
+             shared between the two related Zend\Db adapters. -->
+        <const name="TESTS_ZEND_DB_ADAPTER_PDO_IBM_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_HOSTNAME" value="127.0.0.1" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_PORT" value="50000" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_DB2_DATABASE" value="sample" />
+
+        <!-- Zend\Db\Adapter\Sqlsrv
+
+             Note: Make sure that you create the "test" database and set a
+             username and password. -->
+        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_ENABLED" value="0" />
+        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_HOSTNAME" value="localhost\SQLEXPRESS" />
+        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_USERNAME" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_PASSWORD" value="" />
+        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_DATABASE" value="test" />
+    </php>
+</phpunit>

@@ -1,6 +1,6 @@
 <phpunit bootstrap="./test/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="zend-authentication Test Suite">
+        <testsuite name="zend-config Test Suite">
             <directory>./test/</directory>
         </testsuite>
     </testsuites>
@@ -30,16 +30,9 @@
              currently in use in ZF2 for ALL COMPONENTS; you should choose the
              constants appropriate to the component you are migrating. -->
 
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_ENABLED" value="0" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_DATABASE" value=":memory:" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_ENABLED" value="0" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_PORT" value="50000" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_USERNAME" value="" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_PASSWORD" value="" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_DATABASE" value="*LOCAL" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_CREDENTIAL_TABLE" value="YOURLIB.TESTING_USERS" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_LDAP_ONLINE_ENABLED" value="0" />
-
+        <const name="TESTS_ZEND_CONFIG_YAML_ENABLED" value="0" />
+        <const name="TESTS_ZEND_CONFIG_YAML_LIB_INCLUDE" value="" />
+        <const name="TESTS_ZEND_CONFIG_WRITER_YAML_CALLBACK" value="" />
+        <const name="TESTS_ZEND_CONFIG_READER_YAML_CALLBACK" value="" />
     </php>
 </phpunit>

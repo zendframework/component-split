@@ -1,6 +1,6 @@
 <phpunit bootstrap="./test/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="zend-authentication Test Suite">
+        <testsuite name="zend-crypt Test Suite">
             <directory>./test/</directory>
         </testsuite>
     </testsuites>
@@ -32,16 +32,8 @@
 
              The values present below reflect the correct values for Travis-CI. -->
 
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_ENABLED" value="1" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_PDO_SQLITE_DATABASE" value=":memory:" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_ENABLED" value="0" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_PORT" value="50000" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_USERNAME" value="" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_PASSWORD" value="" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_DATABASE" value="*LOCAL" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_DBTABLE_DB2_CREDENTIAL_TABLE" value="YOURLIB.TESTING_USERS" />
-        <const name="TESTS_ZEND_AUTH_ADAPTER_LDAP_ONLINE_ENABLED" value="0" />
-
+        <!-- TESTS_ZEND_CRYPT_OPENSSL_CONF => location of an openssl.cnf file
+             for use with RSA encryption. -->
+        <const name="TESTS_ZEND_CRYPT_OPENSSL_CONF" value="0" />
     </php>
 </phpunit>
