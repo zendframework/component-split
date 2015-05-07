@@ -32,73 +32,32 @@
 
              The values present below reflect the correct values for Travis-CI. -->
 
-        <!-- Zend\Db\Adapter\Pdo\Mysql and Zend\Db\Adapter\Mysqli
+        <!-- Integration Test Variables -->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_MYSQL_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_MYSQL_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_MYSQL_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_MYSQL_DATABASE" value="" />-->
 
-             There are separate properties to enable tests for the PDO_MYSQL
-             adapter and the native Mysqli adapters, but the other properties
-             are shared between the two MySQL-related Zend\Db adapters. -->
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MYSQL_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQLI_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_DATABASE" value="test" />
-        <const name="TESTS_ZEND_DB_ADAPTER_MYSQL_PORT" value="3306" />
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_DATABASE" value="" />-->
 
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_SQLITE_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_SQLITE_DATABASE" value=":memory:" />
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_OCI8_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_OCI8_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_OCI8_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_OCI8_DATABASE" value="" />-->
 
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_IBMDB2_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_IBMDB2_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_IBMDB2_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_IBMDB2_DATABASE" value="" />-->
 
-        <!-- Zend\Db\Adapter\Pdo\Mssql
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_PGSQL_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_PGSQL_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_PGSQL_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_PGSQL_DATABASE" value="" />-->
 
-             Note that you need to patch your ntwdblib.dll, the one that
-             comes with PHP does not work. See user comments at
-             http://us2.php.net/manual/en/ref.mssql.php -->
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_MSSQL_DATABASE" value="test" />
-
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_PGSQL_DATABASE" value="postgres" />
-
-        <!-- Zend\Db\Adapter\Oracle and Zend\Db\Adapter\Pdo\Oci
-
-             There are separate properties to enable tests for the PDO_OCI
-             adapter and the native Oracle adapter, but the other properties
-             are shared between the two Oracle-related Zend\Db adapters. -->
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_OCI_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_ORACLE_SID" value="xe" />
-
-        <!-- Zend\Db\Adapter\Db2 and Zend\Db\Adapter\Pdo\Ibm
-
-             There are separate properties to enable tests for the PDO_IBM
-             adapter and the native DB2 adapter, but the other properties are
-             shared between the two related Zend\Db adapters. -->
-        <const name="TESTS_ZEND_DB_ADAPTER_PDO_IBM_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_HOSTNAME" value="127.0.0.1" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_PORT" value="50000" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_DB2_DATABASE" value="sample" />
-
-        <!-- Zend\Db\Adapter\Sqlsrv
-
-             Note: Make sure that you create the "test" database and set a
-             username and password. -->
-        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_ENABLED" value="0" />
-        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_HOSTNAME" value="localhost\SQLEXPRESS" />
-        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_USERNAME" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_PASSWORD" value="" />
-        <const name="TESTS_ZEND_DB_ADAPTER_SQLSRV_DATABASE" value="test" />
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLITE_MEMORY" value="true" />-->
     </php>
 </phpunit>

@@ -1,10 +1,5 @@
 <?php
 $finder = Symfony\CS\Finder\DefaultFinder::create()
-    ->notPath('ZendTest/Code/Generator/TestAsset')
-    ->notPath('ZendTest/Code/Reflection/FunctionReflectionTest.php')
-    ->notPath('ZendTest/Code/Reflection/MethodReflectionTest.php')
-    ->notPath('ZendTest/Code/Reflection/TestAsset')
-    ->notPath('ZendTest/Code/TestAsset')
     ->notPath('Generator/TestAsset')
     ->notPath('Reflection/FunctionReflectionTest.php')
     ->notPath('Reflection/MethodReflectionTest.php')
