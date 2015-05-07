@@ -7,7 +7,26 @@ history.
 
 ## Splitting a component
 
-The main utility is `bin/split-component.sh`. This script accepts the component
+The primary entry-point utility is `bin/split.sh`. This script accepts up to two
+arguments:
+
+- `-c COMPONENT` for the component name (it should be the same as it appears in
+  the ZF2 library directory)
+- `-p PHP` for the path to the PHP executable (if it cannot be found via `which
+  php`)
+
+This script will use the various files located under
+`assets/root-files/COMPONENT` to split the component.
+
+As an example:
+
+```console
+$ ./bin/split.sh -c Authentication
+```
+
+### Custom split
+
+The heavy-lifting utility is `bin/split-component.sh`. This script accepts the component
 name, paths to a number of component-specific assets, and then performs a `git
 filter-branch` that rewrites each commit to only contain the source code and
 tests for the given component, as well as repository assets such as the license,
