@@ -1,4 +1,8 @@
-<phpunit bootstrap="./test/bootstrap.php" colors="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="./test/bootstrap.php"
+         colors="true">
     <testsuites>
         <testsuite name="zend-ldap Test Suite">
             <directory>./test/</directory>
@@ -24,7 +28,7 @@
              functionality works as expected. Such tests include those for
              Zend\Soap and Zend\Session, which require that headers not be sent
              in order to work. -->
-        <const name="TESTS_ZEND_OB_ENABLED" value="0" />
+        <const name="TESTS_ZEND_OB_ENABLED" value="false" />
 
         <!-- Zend\Ldap online tests
 
@@ -58,17 +62,17 @@
                                 ALT_DN: CN=Alice Baker,OU=Sales,DC=foo,DC=net
                           ALT_PASSWORD: apass
         -->
-        <const name="TESTS_ZEND_LDAP_ONLINE_ENABLED" value="0" />
+        <const name="TESTS_ZEND_LDAP_ONLINE_ENABLED" value="false" />
         <const name="TESTS_ZEND_LDAP_HOST" value="localhost" />
         <const name="TESTS_ZEND_LDAP_PORT" value="389" />
-        <const name="TESTS_ZEND_LDAP_USE_START_TLS" value="1" />
-        <const name="TESTS_ZEND_LDAP_USE_SSL" value="0" />
+        <const name="TESTS_ZEND_LDAP_USE_START_TLS" value="true" />
+        <const name="TESTS_ZEND_LDAP_USE_SSL" value="false" />
         <const name="TESTS_ZEND_LDAP_USERNAME" value="CN=someUser,DC=example,DC=com" />
         <const name="TESTS_ZEND_LDAP_PRINCIPAL_NAME" value="someUser@example.com" />
         <const name="TESTS_ZEND_LDAP_PASSWORD" value="" />
-        <const name="TESTS_ZEND_LDAP_BIND_REQUIRES_DN" value="1" />
+        <const name="TESTS_ZEND_LDAP_BIND_REQUIRES_DN" value="true" />
         <const name="TESTS_ZEND_LDAP_BASE_DN" value="OU=Sales,DC=example,DC=com" />
-        <const name="TESTS_ZEND_LDAP_ACCOUNT_FILTER_FORMAT" value="(&(objectClass=posixAccount)(uid=%s))" />
+        <const name="TESTS_ZEND_LDAP_ACCOUNT_FILTER_FORMAT" value="(&amp;(objectClass=posixAccount)(uid=%s))" />
         <const name="TESTS_ZEND_LDAP_ACCOUNT_DOMAIN_NAME" value="example.com" />
         <const name="TESTS_ZEND_LDAP_ACCOUNT_DOMAIN_NAME_SHORT" value="EXAMPLE" />
         <const name="TESTS_ZEND_LDAP_ALT_USERNAME" value="anotherUser" />
