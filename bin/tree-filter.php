@@ -40,8 +40,12 @@ if (is_dir('library/Zend/' . $componentPath)) {
 }
 
 command('rm -Rf *', sprintf("Error removing root-level files for component %s", $component));
-rename('.zend-migrate/src/' . basename($componentPath), 'src');
-rename('.zend-migrate/test/' . basename($componentPath), 'test');
+if (is_dir('.zend_migrate/src/' . basename($componentPath))) {
+    rename('.zend-migrate/src/' . basename($componentPath), 'src');
+}
+if (is_dir('.zend_migrate/test/' . basename($componentPath))) {
+    rename('.zend-migrate/test/' . basename($componentPath), 'test');
+}
 removeDir('.zend-migrate');
 
 foreach (new DirectoryIterator('src') as $fileInfo) {
