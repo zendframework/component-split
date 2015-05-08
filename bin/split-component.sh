@@ -178,17 +178,17 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
                 ${PHPCS_CONFIG:='(none)'}
 "       --msg-filter "
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
-" --tag-name-filter cat release-2.4.0..HEAD ;
-    # git tag -d last-docs-commit ;
-    # for TAG in dev1 dev2 dev3 dev4 beta1 beta2 beta3 beta4 beta5 rc1 rc2 rc3 rc4 rc5 rc6 rc7; do
-    #     git tag -d release-2.0.0${TAG} ;
-    # done ;
-    # echo "Pruning history and removing stale objects" ;
-    # echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
-    # git filter-branch -f --tag-name-filter cat -- --all ; 
-    # git update-ref -d refs/original/refs/heads/master ;
-    # git reflog expire --expire=now --all ;
-    # git gc --prune=now --aggressive ;
+" --tag-name-filter cat release-2.0.0rc7..HEAD ;
+    git tag -d last-docs-commit ;
+    for TAG in dev1 dev2 dev3 dev4 beta1 beta2 beta3 beta4 beta5 rc1 rc2 rc3 rc4 rc5 rc6 rc7; do
+        git tag -d release-2.0.0${TAG} ;
+    done ;
+    echo "Pruning history and removing stale objects" ;
+    echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
+    git filter-branch -f --tag-name-filter cat -- --all ; 
+    git update-ref -d refs/original/refs/heads/master ;
+    git reflog expire --expire=now --all ;
+    git gc --prune=now --aggressive ;
 )
 
 echo
