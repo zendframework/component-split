@@ -68,12 +68,11 @@ To run tests:
   $ ./vendor/bin/phpunit
   ```
 
-You can turn on conditional tests with the TestConfiguration.php file.
+You can turn on conditional tests with the phpunit.xml file.
 To do so:
 
- -  Enter the `test/` subdirectory.
- -  Copy `TestConfiguration.php.dist` file to `TestConfiguration.php`
- -  Edit `TestConfiguration.php` to enable any specific functionality you
+ -  Copy `phpunit.xml.dist` file to `phpunit.xml.php`
+ -  Edit `phpunit.xml.php` to enable any specific functionality you
     want to test, as well as to provide test values to utilize.
 
 ## Running Coding Standards Checks
