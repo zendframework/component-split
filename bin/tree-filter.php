@@ -18,7 +18,6 @@ mkdir('.zend-migrate', 0777);
 $componentPath = str_replace('\\', '/', $component);
 $foundLibrary  = false;
 $foundTests    = false;
-printf("Using componentPath: %s\n", $componentPath);
 if (is_dir('library/Zend/' . $componentPath)) {
     $foundLibrary = true;
     rename(sprintf('library/Zend/%s', $componentPath), '.zend-migrate/src');
