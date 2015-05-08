@@ -53,6 +53,12 @@ $composer['require-dev'] = array_merge($composer['require-dev'], [
     'phpunit/PHPUnit' => '~4.0',
 ]);
 
+// Remove target-dir if present (deprecated, and obsoleted by having PSR-4 
+// autoloading present)
+if (isset($composer['target-dir'])) {
+    unset($composer['target-dir']);
+}
+
 // Emit the new JSON
 fwrite(STDOUT, json_encode(
     $composer,
