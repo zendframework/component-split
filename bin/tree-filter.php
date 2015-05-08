@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/functions.php';
-$component        = $argv[1];
+$component        = str_replace('/', '\\\\', $argv[1]);
 $normalized       = normalizeComponentName($component);
 $rootDir          = $argv[2];
 $assetDir         = $rootDir . '/assets';
@@ -16,34 +16,33 @@ $phpCs            = $argv[8] === '(none)' ? null : $argv[8];
 mkdir('.zend-migrate/src', 0777, true);
 mkdir('.zend-migrate/test', 0777, true);
 
-if (is_dir('library/Zend/' . $component)) {
+$componentPath = str_replace('\\', '/', $component);
+if (is_dir('library/Zend/' . $componentPath)) {
     command(
         'rsync -a library/Zend/%s .zend-migrate/src/',
-        $component,
+        $componentPath,
         sprintf('Failed to sync src directory for component %s; aborting', $component)
     );
-    if (is_dir('tests/Zend/' . $component)) {
+    if (is_dir('tests/Zend/' . $componentPath)) {
         command(
             'rsync -a tests/Zend/%s .zend-migrate/test/',
-            $component,
+            $componentPath,
             sprintf('Failed to sync test directory for component %s; aborting', $component)
         );
     }
-    if (is_dir('tests/ZendTest/' . $component)) {
+    if (is_dir('tests/ZendTest/' . $componentPath)) {
         command(
             'rsync -a tests/ZendTest/%s .zend-migrate/test/',
-            $component,
+            $componentPath,
             sprintf('Failed to sync test directory for component %s; aborting', $component)
         );
     }
 }
 
 command('rm -Rf *', sprintf("Error removing root-level files for component %s", $component));
-rename('.zend-migrate/src/' . $component, 'src');
-rename('.zend-migrate/test/' . $component, 'test');
-rmdir('.zend-migrate/src');
-rmdir('.zend-migrate/test');
-rmdir('.zend-migrate');
+rename('.zend-migrate/src/' . basename($componentPath), 'src');
+rename('.zend-migrate/test/' . basename($componentPath), 'test');
+removeDir('.zend-migrate');
 
 foreach (new DirectoryIterator('src') as $fileInfo) {
     if (! in_array($fileInfo->getExtension(), ['json', 'md'])) {

@@ -58,9 +58,20 @@ echo "Using:"
 echo "    PHP:                           ${PHP_EXEC}"
 echo
 
-PHPUNIT_DIST=${ROOT_DIR}/assets/root-files/${COMPONENT}/phpunit.xml.dist
-PHPUNIT_TRAVIS=${ROOT_DIR}/assets/root-files/${COMPONENT}/phpunit.xml.travis
-PHPCS=${ROOT_DIR}/assets/root-files/${COMPONENT}/php_cs
-README=${ROOT_DIR}/assets/root-files/${COMPONENT}/README.md
+COMPONENT_PATH=${COMPONENT};
 
-$(${ROOT_DIR}/bin/split-component.sh -c ${COMPONENT} -p ${PHP_EXEC} -u ${PHPUNIT_DIST} -t ${PHPUNIT_TRAVIS} -r ${README} -s ${PHPCS})
+if [[ "${COMPONENT}" = "Acl" ]];then
+    COMPONENT="Permissions/Acl";
+    COMPONENT_PATH="Permissions-Acl"
+fi
+if [[ "${COMPONENT}" = "Rbac" ]];then
+    COMPONENT="Permissions/Rbac";
+    COMPONENT_PATH="Permissions-Rbac"
+fi
+
+PHPUNIT_DIST=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.dist
+PHPUNIT_TRAVIS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.travis
+PHPCS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/php_cs
+README=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/README.md
+
+${ROOT_DIR}/bin/split-component.sh -c "${COMPONENT}" -p "${PHP_EXEC}" -u "${PHPUNIT_DIST}" -t "${PHPUNIT_TRAVIS}" -r "${README}" -s "${PHPCS}"

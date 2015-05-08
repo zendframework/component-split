@@ -17,7 +17,10 @@ function createComposerTemplate($component)
 
 function normalizeComponentName($component)
 {
-    return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $component));
+    $component = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $component));
+    $component = str_replace('\\', '-', $component);
+    $component = str_replace('--', '-', $component);
+    return $component;
 }
 
 function arrayMergeRecursive(array $a, array $b, $preserveNumericKeys = false)
@@ -56,4 +59,19 @@ function command($pattern, $errorMessage = null)
         error_log($errorMessage);
         exit(1);
     }
+}
+
+function removeDir($path)
+{
+    $files = array_diff(scandir($path), array('.', '..'));
+    foreach ($files as $file) {
+        $filePath = sprintf('%s/%s', $path, $file);
+        if (is_dir($filePath)) {
+            removeDir($filePath);
+            continue;
+        }
+        unlink($filePath);
+    }
+
+    rmdir($path);
 }
