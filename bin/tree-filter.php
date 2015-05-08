@@ -48,11 +48,13 @@ if (is_dir('.zend_migrate/test/' . basename($componentPath))) {
 }
 removeDir('.zend-migrate');
 
-foreach (new DirectoryIterator('src') as $fileInfo) {
-    if (! in_array($fileInfo->getExtension(), ['json', 'md'])) {
-        continue;
+if (is_dir('src')) {
+    foreach (new DirectoryIterator('src') as $fileInfo) {
+        if (! in_array($fileInfo->getExtension(), ['json', 'md'])) {
+            continue;
+        }
+        rename($fileInfo->getPathName(), './' . $fileInfo->getBasename());
     }
-    rename($fileInfo->getPathName(), './' . $fileInfo->getBasename());
 }
 
 // Root directory files
@@ -99,6 +101,9 @@ if (file_exists('composer.json')) {
 }
 
 // Test directory files
+if (! is_dir('test')) {
+    mkdir('test');
+}
 file_put_contents(
     'test/bootstrap.php',
     str_replace('{COMPONENT}', $normalized, file_get_contents($assetDir . '/test-files/bootstrap.php'))
