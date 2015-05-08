@@ -13,42 +13,35 @@ $readme           = $argv[6] === '(none)' ? null : $argv[6];
 $travisYml        = $argv[7] === '(none)' ? null : $argv[7];
 $phpCs            = $argv[8] === '(none)' ? null : $argv[8];
 
-mkdir('.zend-migrate/src', 0777, true);
-mkdir('.zend-migrate/test', 0777, true);
+mkdir('.zend-migrate', 0777);
 
 $componentPath = str_replace('\\', '/', $component);
+$foundLibrary  = false;
+$foundTests    = false;
+printf("Using componentPath: %s\n", $componentPath);
 if (is_dir('library/Zend/' . $componentPath)) {
-    command(
-        'rsync -a library/Zend/%s .zend-migrate/src/',
-        $componentPath,
-        sprintf('Failed to sync src directory for component %s; aborting', $component)
-    );
+    $foundLibrary = true;
+    rename(sprintf('library/Zend/%s', $componentPath), '.zend-migrate/src');
     if (is_dir('tests/Zend/' . $componentPath)) {
-        command(
-            'rsync -a tests/Zend/%s .zend-migrate/test/',
-            $componentPath,
-            sprintf('Failed to sync test directory for component %s; aborting', $component)
-        );
+        $foundTests = true;
+        rename(sprintf('tests/Zend/%s', $componentPath), '.zend-migrate/test');
     }
     if (is_dir('tests/ZendTest/' . $componentPath)) {
-        command(
-            'rsync -a tests/ZendTest/%s .zend-migrate/test/',
-            $componentPath,
-            sprintf('Failed to sync test directory for component %s; aborting', $component)
-        );
+        $foundTests = true;
+        rename(sprintf('tests/ZendTest/%s', $componentPath), '.zend-migrate/test');
     }
 }
 
 command('rm -Rf *', sprintf("Error removing root-level files for component %s", $component));
-if (is_dir('.zend_migrate/src/' . basename($componentPath))) {
-    rename('.zend-migrate/src/' . basename($componentPath), 'src');
+if ($foundLibrary) {
+    rename('.zend-migrate/src', './src');
 }
-if (is_dir('.zend_migrate/test/' . basename($componentPath))) {
-    rename('.zend-migrate/test/' . basename($componentPath), 'test');
+if ($foundTests) {
+    rename('.zend-migrate/test', './test');
 }
 removeDir('.zend-migrate');
 
-if (is_dir('src')) {
+if ($foundLibrary) {
     foreach (new DirectoryIterator('src') as $fileInfo) {
         if (! in_array($fileInfo->getExtension(), ['json', 'md'])) {
             continue;
@@ -101,7 +94,7 @@ if (file_exists('composer.json')) {
 }
 
 // Test directory files
-if (! is_dir('test')) {
+if (! $foundTests) {
     mkdir('test');
 }
 file_put_contents(
