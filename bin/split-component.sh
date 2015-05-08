@@ -6,6 +6,8 @@ echo
 ZF2_REPO="git://github.com/zendframework/zf2"
 ROOT_DIR=$(readlink -f $(dirname $0)/..)
 TMP_DIR=${ROOT_DIR}/tmp
+ORIGIN_TAG="2.0.0rc7"
+REMOVE_TAGS=("release-2.0.0dev1" "release-2.0.0dev2" "release-2.0.0dev3" "release-2.0.0dev4" "release-2.0.0beta1" "release-2.0.0beta2" "release-2.0.0beta3" "release-2.0.0beta4" "release-2.0.0beta5" "release-2.0.0rc1" "release-2.0.0rc2" "release-2.0.0rc3" "release-2.0.0rc4" "release-2.0.0rc5" "release-2.0.0rc6" "release-2.0.0rc7")
 
 # Variables to set via options
 COMPONENT=
@@ -127,6 +129,11 @@ if [[ $ERROR != 0 ]]; then
     help $ERROR
 fi
 
+if [ "${COMPONENT}" -eq "Permisions/Rbac" -o "${COMPONENT}" -eq "Test" ];then
+    ORIGIN_TAG="release-2.0.7"
+    REMOVE_TAGS+=("release-2.0.8")
+fi
+
 # Begin!
 echo "Splitting component ${COMPONENT}"
 echo "Using:"
@@ -178,9 +185,9 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
                 ${PHPCS_CONFIG:='(none)'}
 "       --msg-filter "
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
-" --tag-name-filter cat release-2.0.0rc7..HEAD ;
+" --tag-name-filter cat ${ORIGIN_TAG}..HEAD ;
     git tag -d last-docs-commit ;
-    for TAG in dev1 dev2 dev3 dev4 beta1 beta2 beta3 beta4 beta5 rc1 rc2 rc3 rc4 rc5 rc6 rc7; do
+    for TAG in $REMOVE_TAGS; do
         git tag -d release-2.0.0${TAG} ;
     done ;
     echo "Pruning history and removing stale objects" ;
