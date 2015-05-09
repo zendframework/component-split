@@ -6,8 +6,9 @@ echo
 ZF2_REPO="git://github.com/zendframework/zf2"
 ROOT_DIR=$(readlink -f $(dirname $0)/..)
 TMP_DIR=${ROOT_DIR}/tmp
-ORIGIN_TAG="2.0.0rc7"
+ORIGIN_TAG="bb50be26b24a9e0e62a8f4abecce53259d707b61"
 REMOVE_TAGS=("release-2.0.0dev1" "release-2.0.0dev2" "release-2.0.0dev3" "release-2.0.0dev4" "release-2.0.0beta1" "release-2.0.0beta2" "release-2.0.0beta3" "release-2.0.0beta4" "release-2.0.0beta5" "release-2.0.0rc1" "release-2.0.0rc2" "release-2.0.0rc3" "release-2.0.0rc4" "release-2.0.0rc5" "release-2.0.0rc6" "release-2.0.0rc7")
+PRUNE_BEFORE="bb50be26b24a9e0e62a8f4abecce53259d707b61"
 
 # Variables to set via options
 COMPONENT=
@@ -129,9 +130,10 @@ if [[ $ERROR != 0 ]]; then
     help $ERROR
 fi
 
-if [ "${COMPONENT}" -eq "Permisions/Rbac" -o "${COMPONENT}" -eq "Test" ];then
-    ORIGIN_TAG="release-2.0.7"
+if [ "${COMPONENT}" = "Permissions/Rbac" ] || [ "${COMPONENT}" = "Test" ];then
+    ORIGIN_TAG="c74383840bea3646b83f9ff5d910eae9a114227e"
     REMOVE_TAGS+=("release-2.0.8")
+    PRUNE_BEFORE="345a8cbedbe8de8a25bf18579fe54d169ac5075a"
 fi
 
 # Begin!
@@ -169,9 +171,14 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
 
 # Perform the tree-filter
 (
-    echo "Executing tree-filter" ;
     cd ${ZF2_PATH} ;
     git remote rm origin ;
+    echo "Removing unneeded tags" ;
+    git tag -d last-docs-commit ;
+    for TAG in "${REMOVE_TAGS[@]}"; do
+        git tag -d ${TAG} ;
+    done ;
+    echo "Executing tree-filter" ;
     git filter-branch -f --prune-empty \
         --tree-filter "
             ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
@@ -186,13 +193,9 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
 "       --msg-filter "
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
 " --tag-name-filter cat ${ORIGIN_TAG}..HEAD ;
-    git tag -d last-docs-commit ;
-    for TAG in $REMOVE_TAGS; do
-        git tag -d release-2.0.0${TAG} ;
-    done ;
-    echo "Pruning history and removing stale objects" ;
-    echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
-    git filter-branch -f --tag-name-filter cat -- --all ; 
+    echo "Pruning history starting at ${PRUNE_BEFORE}" ;
+    echo ${PRUNE_BEFORE} > .git/info/grafts ;
+    git filter-branch -f --prune-empty --tag-name-filter cat -- --all ; 
     git update-ref -d refs/original/refs/heads/master ;
     git reflog expire --expire=now --all ;
     git gc --prune=now --aggressive ;

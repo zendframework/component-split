@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/functions.php';
-$component        = str_replace('/', '\\\\', $argv[1]);
+$component        = str_replace('/', '\\', $argv[1]);
 $normalized       = normalizeComponentName($component);
 $rootDir          = $argv[2];
 $assetDir         = $rootDir . '/assets';
@@ -73,20 +73,20 @@ copy($phpUnitTravis, 'phpunit.xml.travis');
 if (file_exists('composer.json')) {
     rename('composer.json', 'composer.json.orig');
     command(
-        'cat composer.json.orig | %s %s/composer-rewriter.php %s %s/composer.json > composer.json',
+        'cat composer.json.orig | %s %s/composer-rewriter.php "%s" "%s/composer.json" > composer.json',
         $php,
         $scriptDir,
-        $component,
+        str_replace('\\', '\\\\', $component),
         $tmpDir,
         'Error rewriting composer.json'
     );
     unlink('composer.json.orig');
 } else {
     command(
-        'echo -n | %s %s/composer-rewriter.php %s %s/composer.json > composer.json',
+        'echo -n | %s %s/composer-rewriter.php "%s" "%s/composer.json" > composer.json',
         $php,
         $scriptDir,
-        $component,
+        str_replace('\\', '\\\\', $component),
         $tmpDir,
         'Error creating composer.json'
     );
