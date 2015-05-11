@@ -63,15 +63,31 @@ COMPONENT_PATH=${COMPONENT};
 if [[ "${COMPONENT}" = "Acl" ]];then
     COMPONENT="Permissions/Acl";
     COMPONENT_PATH="Permissions-Acl"
-fi
-if [[ "${COMPONENT}" = "Rbac" ]];then
-    COMPONENT="Permissions/Rbac";
-    COMPONENT_PATH="Permissions-Rbac"
+    ZF2_PATH="zend-permissions-acl"
+else
+    if [[ "${COMPONENT}" = "Rbac" ]];then
+        COMPONENT="Permissions/Rbac";
+        COMPONENT_PATH="Permissions-Rbac"
+        ZF2_PATH="zend-permissions-rbac"
+    else
+        COMPONENT_PATH=${COMPONENT}
+        ZF2_PATH="zend-$(echo ${COMPONENT} | $PHP_EXEC ${ROOT_DIR}/bin/normalize.php)"
+    fi
 fi
 
-PHPUNIT_DIST=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.dist
-PHPUNIT_TRAVIS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.travis
-PHPCS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/php_cs
-README=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/README.md
+ASSETS="${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}"
 
-${ROOT_DIR}/bin/split-component.sh -c "${COMPONENT}" -p "${PHP_EXEC}" -u "${PHPUNIT_DIST}" -t "${PHPUNIT_TRAVIS}" -r "${README}" -s "${PHPCS}"
+PHPUNIT_DIST=${ASSETS}/phpunit.xml.dist
+PHPUNIT_TRAVIS=${ASSETS}/phpunit.xml.travis
+PHPCS=${ASSETS}/php_cs
+README=${ASSETS}/README.md
+
+echo "Splitting ${COMPONENT} using:"
+echo "    REPO PATH:             ${ZF2_PATH}"
+echo "    README:                ${README}"
+echo "    phpunit.xml.dist:      ${PHPUNIT_DIST}"
+echo "    phpunit.xml.travis:    ${PHPUNIT_TRAVIS}"
+echo "    php_cs:                ${PHPCS}"
+echo
+
+${ROOT_DIR}/bin/split-component.sh -c "${COMPONENT}" -z "${ZF2_PATH}" -p "${PHP_EXEC}" -u "${PHPUNIT_DIST}" -t "${PHPUNIT_TRAVIS}" -r "${README}" -s "${PHPCS}"
