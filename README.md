@@ -24,6 +24,14 @@ As an example:
 $ ./bin/split.sh -c Authentication
 ```
 
+Two components have special rules: `Zend\Permissions\Acl` and
+`Zend\Permissinos\Rbac`; these are invoked as simply `Acl` and `Rbac`,
+respectively.
+
+The files will be split into a directory named after the component; e.g.,
+Authentication becomes `zend-authentication`, Acl becomes
+`zend-permissions-acl`, etc. This allows parallel runs in the same directory.
+
 ### Custom split
 
 The heavy-lifting utility is `bin/split-component.sh`. This script accepts the component
