@@ -168,8 +168,7 @@ fi
 
 # Copy the composer.json for the component to the temporary directory
 cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.json"
-
-# Perform the tree-filter
+zsh:1: command not found: k
 (
     cd ${ZF2_PATH} ;
     git remote rm origin ;
@@ -179,7 +178,7 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
         git tag -d ${TAG} ;
     done ;
     echo "Executing tree-filter" ;
-    git filter-branch -f --prune-empty \
+    git filter-branch -f \
         --tree-filter "
             ${PHP_EXEC} ${ROOT_DIR}/bin/tree-filter.php \
                 ${COMPONENT} \
@@ -192,11 +191,18 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.js
                 ${PHPCS_CONFIG:='(none)'}
 "       --msg-filter "
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
-" --tag-name-filter cat ${ORIGIN_TAG}..HEAD ;
-    echo "Pruning history starting at ${PRUNE_BEFORE}" ;
-    echo ${PRUNE_BEFORE} > .git/info/grafts ;
-    git filter-branch -f --prune-empty --tag-name-filter cat -- --all ; 
-    git update-ref -d refs/original/refs/heads/master ;
+"       --commit-filter 'git_commit_non_empty_tree "$@"' \
+        --tag-name-filter cat \
+        ${ORIGIN_TAG}..HEAD ;
+    echo "Removing empty merge commits" ;
+    git filter-branch -f \
+        --commit-filter '
+            if [ z$1 = z`git rev-parse $3^{tree}` ];then
+                skip_commit "$@";
+            else
+                git commit-tree "$@";
+            fi
+'       --tag-name-filter cat ${PRUNE_BEFORE}..HEAD ;
     git reflog expire --expire=now --all ;
     git gc --prune=now --aggressive ;
 )
