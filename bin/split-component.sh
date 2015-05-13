@@ -3,12 +3,10 @@ echo "ZF2 Component Split Tool, v0.1.0"
 echo
 
 # General variables
-ZF2_REPO="git://github.com/zendframework/zf2"
 ROOT_DIR=$(readlink -f $(dirname $0)/..)
+ZF2_REPO="git://github.com/zendframework/zf2.git"
 TMP_DIR=${ROOT_DIR}/tmp
-ORIGIN_TAG="bb50be26b24a9e0e62a8f4abecce53259d707b61"
 REMOVE_TAGS=("release-2.0.0dev1" "release-2.0.0dev2" "release-2.0.0dev3" "release-2.0.0dev4" "release-2.0.0beta1" "release-2.0.0beta2" "release-2.0.0beta3" "release-2.0.0beta4" "release-2.0.0beta5" "release-2.0.0rc1" "release-2.0.0rc2" "release-2.0.0rc3" "release-2.0.0rc4" "release-2.0.0rc5" "release-2.0.0rc6" "release-2.0.0rc7")
-PRUNE_BEFORE="bb50be26b24a9e0e62a8f4abecce53259d707b61"
 
 # Variables to set via options
 COMPONENT=
@@ -131,9 +129,7 @@ if [[ $ERROR != 0 ]]; then
 fi
 
 if [ "${COMPONENT}" = "Permissions/Rbac" ] || [ "${COMPONENT}" = "Test" ];then
-    ORIGIN_TAG="c74383840bea3646b83f9ff5d910eae9a114227e"
     REMOVE_TAGS+=("release-2.0.8")
-    PRUNE_BEFORE="345a8cbedbe8de8a25bf18579fe54d169ac5075a"
 fi
 
 # Begin!
@@ -167,8 +163,10 @@ if [[ ! -d "${TMP_DIR}" ]];then
 fi
 
 # Copy the composer.json for the component to the temporary directory
-cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.json"
-zsh:1: command not found: k
+NORMALIZED=$(echo ${COMPONENT} | ${PHP_EXEC} ${ROOT_DIR}/bin/normalize.php)
+cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.${NORMALIZED}.json"
+
+# Perform the tree filter
 (
     cd ${ZF2_PATH} ;
     git remote rm origin ;
@@ -193,7 +191,7 @@ zsh:1: command not found: k
             sed -re 's/(^|[^a-zA-Z])(\#[1-9][0-9]*)/\1zendframework\/zf2\2/g'
 "       --commit-filter 'git_commit_non_empty_tree "$@"' \
         --tag-name-filter cat \
-        ${ORIGIN_TAG}..HEAD ;
+        -- --all ;
     echo "Removing empty merge commits" ;
     git filter-branch -f \
         --commit-filter '
@@ -202,7 +200,7 @@ zsh:1: command not found: k
             else
                 git commit-tree "$@";
             fi
-'       --tag-name-filter cat ${PRUNE_BEFORE}..HEAD ;
+'       --tag-name-filter cat -- --all ;
     git reflog expire --expire=now --all ;
     git gc --prune=now --aggressive ;
 )

@@ -7,6 +7,7 @@ ROOT_DIR=$(readlink -f $(dirname $0)/..)
 # Variables to set via options
 COMPONENT=
 PHP_EXEC=$(which php)
+ZF2_PATH=
 
 # Functions
 function help {
@@ -19,12 +20,13 @@ function help {
     echo "-h                      Help; this message"
     echo "-c <Component>          Component to split out (REQUIRED)"
     echo "-p <PHP executable>     PHP executable to use (for composer rewrite); defaults to /usr/bin/env php"
+    echo "-r <path>               Path in which to create split component; defaults to zend-{component}"
 
     exit $STATUS
 }
 
 # Parse incoming options
-while getopts ":hc:p:" opt ;do
+while getopts ":hc:p:r:" opt ;do
     case $opt in
         h)
             help
@@ -34,6 +36,9 @@ while getopts ":hc:p:" opt ;do
             ;;
         p)
             PHP_EXEC=$OPTARG
+            ;;
+        r)
+            ZF2_PATH=$OPTARG
             ;;
         \?)
             echo "Invalid option!"
@@ -63,15 +68,37 @@ COMPONENT_PATH=${COMPONENT};
 if [[ "${COMPONENT}" = "Acl" ]];then
     COMPONENT="Permissions/Acl";
     COMPONENT_PATH="Permissions-Acl"
-fi
-if [[ "${COMPONENT}" = "Rbac" ]];then
-    COMPONENT="Permissions/Rbac";
-    COMPONENT_PATH="Permissions-Rbac"
+    if [[ "${ZF2_PATH}" = "" ]];then
+        ZF2_PATH="zend-permissions-acl"
+    fi
+else
+    if [[ "${COMPONENT}" = "Rbac" ]];then
+        COMPONENT="Permissions/Rbac";
+        COMPONENT_PATH="Permissions-Rbac"
+        if [[ "${ZF2_PATH}" = "" ]];then
+            ZF2_PATH="zend-permissions-rbac"
+        fi
+    else
+        COMPONENT_PATH=${COMPONENT}
+        if [[ "${ZF2_PATH}" = "" ]];then
+            ZF2_PATH="zend-$(echo ${COMPONENT} | $PHP_EXEC ${ROOT_DIR}/bin/normalize.php)"
+        fi
+    fi
 fi
 
-PHPUNIT_DIST=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.dist
-PHPUNIT_TRAVIS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/phpunit.xml.travis
-PHPCS=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/php_cs
-README=${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}/README.md
+ASSETS="${ROOT_DIR}/assets/root-files/${COMPONENT_PATH}"
 
-${ROOT_DIR}/bin/split-component.sh -c "${COMPONENT}" -p "${PHP_EXEC}" -u "${PHPUNIT_DIST}" -t "${PHPUNIT_TRAVIS}" -r "${README}" -s "${PHPCS}"
+PHPUNIT_DIST=${ASSETS}/phpunit.xml.dist
+PHPUNIT_TRAVIS=${ASSETS}/phpunit.xml.travis
+PHPCS=${ASSETS}/php_cs
+README=${ASSETS}/README.md
+
+echo "Splitting ${COMPONENT} using:"
+echo "    REPO PATH:             ${ZF2_PATH}"
+echo "    README:                ${README}"
+echo "    phpunit.xml.dist:      ${PHPUNIT_DIST}"
+echo "    phpunit.xml.travis:    ${PHPUNIT_TRAVIS}"
+echo "    php_cs:                ${PHPCS}"
+echo
+
+${ROOT_DIR}/bin/split-component.sh -c "${COMPONENT}" -z "${ZF2_PATH}" -p "${PHP_EXEC}" -u "${PHPUNIT_DIST}" -t "${PHPUNIT_TRAVIS}" -r "${README}" -s "${PHPCS}"

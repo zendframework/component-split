@@ -71,7 +71,7 @@ function parseComposerJson($path, $component, $useTemplateOnError = true)
 
     if (empty($json)) {
         if ($useTemplateOnError) {
-            error_log(sprintf("\nNo composer.json contents for component %s; using template\n", $component));
+            error_log(sprintf("\nNo composer.json contents for component %s at path %s; using template\n", $component, $path));
         }
 
         return $useTemplateOnError ? createComposerTemplate($component) : [];
