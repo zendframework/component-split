@@ -7,6 +7,7 @@ ROOT_DIR=$(readlink -f $(dirname $0)/..)
 # Variables to set via options
 COMPONENT=
 PHP_EXEC=$(which php)
+ZF2_PATH=
 
 # Functions
 function help {
@@ -19,12 +20,13 @@ function help {
     echo "-h                      Help; this message"
     echo "-c <Component>          Component to split out (REQUIRED)"
     echo "-p <PHP executable>     PHP executable to use (for composer rewrite); defaults to /usr/bin/env php"
+    echo "-r <path>               Path in which to create split component; defaults to zend-{component}"
 
     exit $STATUS
 }
 
 # Parse incoming options
-while getopts ":hc:p:" opt ;do
+while getopts ":hc:p:r:" opt ;do
     case $opt in
         h)
             help
@@ -34,6 +36,9 @@ while getopts ":hc:p:" opt ;do
             ;;
         p)
             PHP_EXEC=$OPTARG
+            ;;
+        r)
+            ZF2_PATH=$OPTARG
             ;;
         \?)
             echo "Invalid option!"
@@ -63,15 +68,21 @@ COMPONENT_PATH=${COMPONENT};
 if [[ "${COMPONENT}" = "Acl" ]];then
     COMPONENT="Permissions/Acl";
     COMPONENT_PATH="Permissions-Acl"
-    ZF2_PATH="zend-permissions-acl"
+    if [[ "${ZF2_PATH}" = "" ]];then
+        ZF2_PATH="zend-permissions-acl"
+    fi
 else
     if [[ "${COMPONENT}" = "Rbac" ]];then
         COMPONENT="Permissions/Rbac";
         COMPONENT_PATH="Permissions-Rbac"
-        ZF2_PATH="zend-permissions-rbac"
+        if [[ "${ZF2_PATH}" = "" ]];then
+            ZF2_PATH="zend-permissions-rbac"
+        fi
     else
         COMPONENT_PATH=${COMPONENT}
-        ZF2_PATH="zend-$(echo ${COMPONENT} | $PHP_EXEC ${ROOT_DIR}/bin/normalize.php)"
+        if [[ "${ZF2_PATH}" = "" ]];then
+            ZF2_PATH="zend-$(echo ${COMPONENT} | $PHP_EXEC ${ROOT_DIR}/bin/normalize.php)"
+        fi
     fi
 fi
 
