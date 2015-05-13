@@ -5,9 +5,10 @@
 .settings/
 .*.sw*
 .*.un~
-build/
 nbproject
 tmp/
 
+clover.xml
+coveralls-upload.json
 phpunit.xml
 vendor
