@@ -73,21 +73,23 @@ copy($phpUnitTravis, 'phpunit.xml.travis');
 if (file_exists('composer.json')) {
     rename('composer.json', 'composer.json.orig');
     command(
-        'cat composer.json.orig | %s %s/composer-rewriter.php "%s" "%s/composer.json" > composer.json',
+        'cat composer.json.orig | %s %s/composer-rewriter.php "%s" "%s/composer.%s.json" > composer.json',
         $php,
         $scriptDir,
         str_replace('\\', '\\\\', $component),
         $tmpDir,
+        $normalized,
         'Error rewriting composer.json'
     );
     unlink('composer.json.orig');
 } else {
     command(
-        'echo -n | %s %s/composer-rewriter.php "%s" "%s/composer.json" > composer.json',
+        'echo -n | %s %s/composer-rewriter.php "%s" "%s/composer.%s.json" > composer.json',
         $php,
         $scriptDir,
         str_replace('\\', '\\\\', $component),
         $tmpDir,
+        $normalized,
         'Error creating composer.json'
     );
 }
