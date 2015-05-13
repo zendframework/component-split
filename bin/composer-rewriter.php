@@ -48,7 +48,7 @@ if (! isset($composer['require-dev'])) {
 
 // Seed the require-dev section with QA tools
 $composer['require-dev'] = array_merge($composer['require-dev'], [
-    'fabpot/php-cs-fixer' => '~1.0',
+    'fabpot/php-cs-fixer' => '1.7.*',
     'satooshi/php-coveralls' => 'dev-master',
     'phpunit/PHPUnit' => '~4.0',
 ]);
