@@ -175,6 +175,12 @@ cp "${ZF2_PATH}/library/Zend/${COMPONENT}/composer.json" "${TMP_DIR}/composer.${
     for TAG in "${REMOVE_TAGS[@]}"; do
         git tag -d ${TAG} ;
     done ;
+    echo "Pruning history" ;
+    echo bb50be26b24a9e0e62a8f4abecce53259d707b61 > .git/info/grafts ;
+    git filter-branch --tag-name-filter cat -- --all ;
+    git reflog expire --expire=now --all ;
+    git gc --prune=now --aggressive ;
+    rm .git/info/grafts ;
     echo "Executing tree-filter" ;
     git filter-branch -f \
         --tree-filter "
