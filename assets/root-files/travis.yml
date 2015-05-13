@@ -26,13 +26,10 @@ before_install:
 install:
   - composer install --no-interaction --prefer-source
 
-before_script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then mkdir -p build/logs ; fi
-
 script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml ; fi
-  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis ; fi
-  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover clover.xml ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit -c phpunit.xml.travis ; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
 
 after_script:
-  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ./vendor/bin/coveralls ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
