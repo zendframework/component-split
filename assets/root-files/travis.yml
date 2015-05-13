@@ -29,7 +29,7 @@ script:
   - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml; fi
   - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then vendor/bin/phpunit -c phpunit.xml.travis; fi
  
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs; fi
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/php-cs-fixer fix -v --diff --dry-run; fi
  
 after_script:
   - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/coveralls; fi
