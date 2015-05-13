@@ -171,7 +171,7 @@ $ git commit
 
 ... write your log message ...
 
-p
+
 ```console
 $ git push {username} hotfix/9295:hotfix/9295
 Counting objects: 38, done.
