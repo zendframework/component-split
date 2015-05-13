@@ -21,15 +21,15 @@ notifications:
 install:
   - if [[ $TRAVIS_PHP_VERSION != '5.6' && $TRAVIS_PHP_VERSION != 'hhvm' && $TRAVIS_PHP_VERSION != '7' ]]; then phpenv config-rm xdebug.ini;  fi
   - composer install --no-interaction --prefer-source
- 
+
 before_script:
   - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then mkdir -p build/logs; fi
- 
+
 script:
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml; fi
-  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis; fi
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml; fi
+  - if [[ $TRAVIS_PHP_VERSION != '5.6' ]]; then vendor/bin/phpunit -c phpunit.xml.travis; fi
  
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs; fi
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs; fi
  
 after_script:
-  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then php vendor/bin/coveralls; fi
+  - if [[ $TRAVIS_PHP_VERSION = '5.6' ]]; then vendor/bin/coveralls; fi
