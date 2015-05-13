@@ -6,7 +6,7 @@ $component = $argv[1];
 $current   = parseComposerJson($argv[2], $component, false);
 $composer  = false;
 $json      = '';
-$composer  = arrayMergeRecursive($current, parseComposerJson('php://stdin', $component));
+$composer  = arrayMergeRecursive($current, parseComposerJson('php://stdin', $component), true);
 
 // Reset homepage
 $composer['homepage'] = 'https://github.com/zendframework/zend-' . normalizeComponentName($component);
