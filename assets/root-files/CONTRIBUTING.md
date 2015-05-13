@@ -71,8 +71,8 @@ To run tests:
 You can turn on conditional tests with the phpunit.xml file.
 To do so:
 
- -  Copy `phpunit.xml.dist` file to `phpunit.xml.php`
- -  Edit `phpunit.xml.php` to enable any specific functionality you
+ -  Copy `phpunit.xml.dist` file to `phpunit.xml`
+ -  Edit `phpunit.xml` to enable any specific functionality you
     want to test, as well as to provide test values to utilize.
 
 ## Running Coding Standards Checks
@@ -171,7 +171,7 @@ $ git commit
 
 ... write your log message ...
 
-
+p
 ```console
 $ git push {username} hotfix/9295:hotfix/9295
 Counting objects: 38, done.
