@@ -5,13 +5,13 @@ language: php
 matrix:
   fast_finish: true
   include:
-      - php: 5.5
-      - php: 5.6
-        env:
-            - EXECUTE_TEST_COVERALLS=true
-            - EXECUTE_CS_CHECK=true
-      - php: 7
-      - php: hhvm 
+    - php: 5.5
+    - php: 5.6
+      env:
+        - EXECUTE_TEST_COVERALLS=true
+        - EXECUTE_CS_CHECK=true
+    - php: 7
+    - php: hhvm 
   allow_failures:
     - php: 7
     - php: hhvm
@@ -19,18 +19,20 @@ matrix:
 notifications:
   irc: "irc.freenode.org#zftalk.dev"
   email: false
+
+before_install:
+  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
  
 install:
-  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ; fi
   - composer install --no-interaction --prefer-source
  
 before_script:
-  - if [[ $EXECUTE_TEST_COVERALLS = 'true' ]]; then mkdir -p build/logs ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then mkdir -p build/logs ; fi
  
 script:
-  - if [[ $EXECUTE_TEST_COVERALLS = 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml ; fi
   - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis ; fi
-  - if [[ $EXECUTE_CS_CHECK = 'true' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
  
 after_script:
-  - if [[ $EXECUTE_TEST_COVERALLS = 'true' ]]; then php ./vendor/bin/coveralls ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then php ./vendor/bin/coveralls ; fi
