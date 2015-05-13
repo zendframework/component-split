@@ -30,7 +30,7 @@ before_script:
 script:
   - if [[ $EXECUTE_TEST_COVERALLS = 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis --coverage-clover build/logs/clover.xml ; fi
   - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then php ./vendor/bin/phpunit -c phpunit.xml.travis ; fi
-  - if [[ $EXECUTE_CS_CHECK' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
+  - if [[ $EXECUTE_CS_CHECK = 'true' ]]; then php ./vendor/bin/php-cs-fixer fix -v --diff --dry-run --config-file=.php_cs ; fi
  
 after_script:
   - if [[ $EXECUTE_TEST_COVERALLS = 'true' ]]; then php ./vendor/bin/coveralls ; fi
