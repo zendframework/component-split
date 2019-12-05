@@ -1,6 +1,10 @@
 Zend Framework Component Split Utilities
 ========================================
 
+> ## Repository abandoned 2019-12-05
+>
+> This repository is no longer maintained.
+
 This repository contains utilities for splitting Zend Framework 2 components out
 of the main ZF2 repository and into their own repositories, complete with
 history.
